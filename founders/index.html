@@ -1,84 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EON Founders Invite</title>
-    <style>
-        body {
-            background-color: #000;
-            color: #FFD700;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 2em;
-        }
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 0.2em;
-        }
-        h2 {
-            font-size: 1.8em;
-            margin-top: 2em;
-        }
-        p {
-            max-width: 600px;
-            text-align: center;
-            line-height: 1.5em;
-        }
-        input, textarea, button {
-            background-color: #111;
-            color: #FFD700;
-            border: 1px solid #FFD700;
-            padding: 0.8em;
-            margin-top: 1em;
-            width: 100%;
-            max-width: 400px;
-        }
-        button {
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #FFD700;
-            color: #000;
-        }
-        .form-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .footer {
-            margin-top: 4em;
-            font-size: 0.9em;
-        }
-        a {
-            color: #FFD700;
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <h1>You Are Not Here by Chance.</h1>
-    <p>You are one of the few chosen to co-create the new world.</p>
-
-    <h2>Your Role in EON</h2>
-    <p>- Co-create the first AI-Human civilization<br>
-       - Test and shape a city that runs on value, not money<br>
-       - Reclaim sacred balance and elevate human dignity</p>
-
-    <div class="form-container">
-        <input type="text" placeholder="Choose your EON Code (e.g., eon-hyd-0002)">
-        <textarea placeholder="Why does this mission speak to you?" rows="4"></textarea>
-        <button>Request Founder Access</button>
     </div>
-
     <div class="footer">
         Already part of EON? <a href="#">Login to your node</a>
     </div>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2.39.5/dist/umd/supabase.min.js"></script>
+<script>
+  const supabase = supabase.createClient(
+    "https://rxucqspxcupyzwjxhujp.supabase.co",
+    "YOUR_SUPABASE_KEY_HERE"
+  );
+
+  const button = document.querySelector("button");
+  const codeInput = document.querySelector("input");
+  const messageInput = document.querySelector("textarea");
+
+  button.addEventListener("click", async () => {
+    const code = codeInput.value.trim();
+    const reason = messageInput.value.trim();
+
+    if (!code || !reason) {
+      alert("Please fill in both fields.");
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("founders_invite")
+      .insert([{ eon_code: code, why_join: reason }]);
+
+    if (error) {
+      console.error("Submission failed:", error.message);
+      alert("Something went wrong. Please try again.");
+    } else {
+      alert("Your invite request has been submitted. 🌱");
+      codeInput.value = "";
+      messageInput.value = "";
+    }
+  });
+</script>
+
 </body>
 </html>
